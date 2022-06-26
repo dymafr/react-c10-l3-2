@@ -1,11 +1,10 @@
 import React, { useRef } from 'react';
 
 export default function CatFriends() {
-  const itemsRef = useRef(null);
+  const itemsRef = useRef(new Map());
 
-  function scrollToId(itemId) {
-    const map = getMap();
-    const node = map.get(itemId);
+  function scrollToId(id) {
+    const node = itemsRef.current.get(id);
     node.scrollIntoView({
       behavior: 'smooth',
       block: 'nearest',
@@ -13,25 +12,17 @@ export default function CatFriends() {
     });
   }
 
-  function getMap() {
-    if (!itemsRef.current) {
-      // Initialize the Map on first usage.
-      itemsRef.current = new Map();
-    }
-    return itemsRef.current;
-  }
-
   return (
     <>
       <nav>
         <button className="btn btn-primary m-20" onClick={() => scrollToId(0)}>
-          Tom
+          Chat 1
         </button>
         <button className="btn btn-primary mr-15" onClick={() => scrollToId(5)}>
-          Maru
+          Chat 6
         </button>
         <button className="btn btn-primary mr-15" onClick={() => scrollToId(9)}>
-          Jellylorum
+          Chat 10
         </button>
       </nav>
       <div>
@@ -41,7 +32,7 @@ export default function CatFriends() {
               style={{ minWidth: '300px' }}
               key={cat.id}
               ref={(node) => {
-                const map = getMap();
+                const map = itemsRef.current;
                 if (node) {
                   map.set(cat.id, node);
                 } else {
