@@ -1,20 +1,67 @@
 import React, { useRef } from 'react';
 
-function App() {
-  const inputRef = useRef(null);
+export default function CatFriends() {
+  const itemsRef = useRef(null);
 
-  function handleClick() {
-    inputRef.current.focus();
+  function scrollToId(itemId) {
+    const map = getMap();
+    const node = map.get(itemId);
+    node.scrollIntoView({
+      behavior: 'smooth',
+      block: 'nearest',
+      inline: 'center',
+    });
+  }
+
+  function getMap() {
+    if (!itemsRef.current) {
+      // Initialize the Map on first usage.
+      itemsRef.current = new Map();
+    }
+    return itemsRef.current;
   }
 
   return (
-    <div className="d-flex flex-column justify-content-center align-items-center p-20">
-      <input ref={inputRef} className="m-10" type="text" />
-      <button className="btn btn-primary" onClick={handleClick}>
-        Focus champ
-      </button>
-    </div>
+    <>
+      <nav>
+        <button className="btn btn-primary m-20" onClick={() => scrollToId(0)}>
+          Tom
+        </button>
+        <button className="btn btn-primary mr-15" onClick={() => scrollToId(5)}>
+          Maru
+        </button>
+        <button className="btn btn-primary mr-15" onClick={() => scrollToId(9)}>
+          Jellylorum
+        </button>
+      </nav>
+      <div>
+        <ul className="d-flex" style={{ overflowX: 'scroll' }}>
+          {catList.map((cat) => (
+            <li
+              style={{ minWidth: '300px' }}
+              key={cat.id}
+              ref={(node) => {
+                const map = getMap();
+                if (node) {
+                  map.set(cat.id, node);
+                } else {
+                  map.delete(cat.id);
+                }
+              }}
+            >
+              <img src={cat.imageUrl} alt={'Cat #' + cat.id} />
+            </li>
+          ))}
+        </ul>
+      </div>
+    </>
   );
 }
 
-export default App;
+const catList = [];
+for (let i = 0; i < 10; i++) {
+  catList.push({
+    id: i,
+    imageUrl: 'https://placekitten.com/250/200?image=' + i,
+  });
+}
