@@ -32,11 +32,7 @@ export default function CatFriends() {
               style={{ minWidth: '300px' }}
               key={cat.id}
               ref={(node) => {
-                if (node) {
-                  itemsRef.current.set(cat.id, node);
-                } else {
-                  itemsRef.current.delete(cat.id);
-                }
+                itemsRef.current.set(cat.id, node);
               }}
             >
               <img src={cat.imageUrl} />
